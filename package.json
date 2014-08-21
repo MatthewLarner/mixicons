@@ -1,0 +1,22 @@
+{
+  "name": "mixicons",
+  "version": "1.0.0",
+  "description": "Convert fonticons class and character mappings to a mixin",
+  "main": "mixicons.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamalarner/mixicons.git"
+  },
+  "keywords": [
+    "fonticons"
+  ],
+  "author": "Matt Larner <matt.larner.dev@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iamalarner/mixicons/issues"
+  },
+  "homepage": "https://github.com/iamalarner/mixicons"
+}
