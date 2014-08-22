@@ -6,6 +6,8 @@ var options = require('minimist')(process.argv.slice(2)),
     kgo = require('kgo'),
     input = options.i || options.input ||  options._[0],
     output = options.o || options.output || options._[1],
+    newFontPath = options.f || options.fontPath || options._[2],
+    path = require('path'),
     fs = require('fs');
 
 function isWordlike(type){
@@ -84,18 +86,18 @@ function renderMixings() {
         '}';
 }
 
-function render(fontFaces, charCodes, settings) {
+function render(ast) {
     var result = '';
 
-    result += renderFontFaces(fontFaces);
+    result += renderFontFaces(ast.fontFaces);
 
     result += '\n\n';
 
-    result += renderCharCodes(charCodes);
+    result += renderCharCodes(ast.charCodes);
 
     result += '\n\n';
 
-    result += renderSettings(settings);
+    result += renderSettings(ast.settings);
 
     result += '\n\n';
 
@@ -132,7 +134,7 @@ kgo
 ('parsed', ['css'], function(css, done) {
     done(null, parse(lex(css.toString())));
 })
-('rendered', ['parsed'], function(ast, done) {
+('converted', ['parsed'], function(ast, done) {
     var fontFaces,
         charCodes = [],
         settings;
@@ -159,7 +161,28 @@ kgo
 
     });
 
-    done(null, render(fontFaces, charCodes, settings));
+    done(null, {
+        fontFaces: fontFaces,
+        charCodes: charCodes,
+        settings: settings
+    });
+})
+('customised', ['converted'], function(ast, done) {
+    if (newFontPath) {
+        ast.fontFaces.forEach(function(fontFace) {
+            fontFace.valueTokens.forEach(function(valueToken) {
+                if(valueToken.type === 'function' && valueToken.functionName === 'url') {
+                    var url = valueToken.arguments[0].source;
+                        oldPath = path.dirname(url.slice(1, -1)),
+                    valueToken.arguments[0].source = '"' + url.slice(1, -1).replace(oldPath, newFontPath) + '"';
+                }
+            });
+        });
+    }
+    done(null, ast);
+})
+('rendered', ['customised'], function(ast, done) {
+    done(null, render(ast));
 })
 (['rendered'], function(rendered, done){
     fs.writeFile(output, rendered, done);
