@@ -9,7 +9,7 @@ var options = require('minimist')(process.argv.slice(2)),
     fs = require('fs');
 
 function isWordlike(type){
-    return type === 'word' || type === 'color';
+    return type === 'word' || type === 'color' || type === 'function';
 }
 function isParenthesisClose(type){
     return type === 'parenthesisClose';
@@ -20,7 +20,16 @@ function renderValue(tokens){
     for(var i = 0; i < tokens.length; i++){
         var token = tokens[i];
 
-        result += token.source;
+        if(token.type === 'function') {
+            var argumentSource = '';
+            token.arguments.forEach(function(argument) {
+                argumentSource += argument.source;
+            });
+            result += token.functionName + '(' + argumentSource + ')';
+        } else {
+            result += token.source;
+        }
+
 
         if(i === tokens.length -1){
             continue;
@@ -42,7 +51,7 @@ function renderStatement(result, statement){
 }
 
 function renderFontFaces(fontFaces){
-    return 'iconFont(){\n'+
+    return '@font-face {\n'+
         fontFaces.reduce(renderStatement, '') +
         '}';
 }
@@ -68,8 +77,8 @@ function renderMixings() {
         '    iconStyle();\n' +
         '    content: icon;\n' +
         '}\n' +
-        'icon(icon, location=before) {\n' +
-        '    &:location{\n' +
+        'icon(icon) {\n' +
+        '    &:before{\n' +
         '        psuedoIcon(icon);\n' +
         '    }\n' +
         '}';
@@ -110,6 +119,10 @@ function convertDataSelector(block) {
     if (block.selectors[0] === '[data-icon]:before') {
         return block.content;
     }
+}
+
+function processFontFace(fontFace) {
+
 }
 
 kgo
