@@ -1,6 +1,6 @@
 {
   "name": "mixicons",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert fonticons class and character mappings to a mixin",
   "main": "mixicons.js",
   "scripts": {
