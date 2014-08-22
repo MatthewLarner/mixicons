@@ -25,6 +25,6 @@
   "dependencies": {
     "kgo": "^1.1.3",
     "minimist": "^1.1.0",
-    "parcss": "^2.2.1"
+    "parcss": "^2.3.0"
   }
 }
