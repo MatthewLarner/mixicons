@@ -75,14 +75,9 @@ function renderSettings(settings){
 
 function renderMixings() {
     return '' +
-        'psuedoIcon(icon) {\n' +
+        'icon(icon) {\n' +
         '    iconStyle();\n' +
         '    content: icon;\n' +
-        '}\n' +
-        'icon(icon) {\n' +
-        '    &:before{\n' +
-        '        psuedoIcon(icon);\n' +
-        '    }\n' +
         '}';
 }
 
